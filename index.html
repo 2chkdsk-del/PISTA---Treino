@@ -626,6 +626,17 @@
   .modal-actions button.primary{background:var(--lime);color:#101314;border-color:var(--lime);}
   .modal-actions button.danger{background:var(--orange);color:#101314;border-color:var(--orange);}
 
+  /* Trilha de dias rolável (Desafio 21 dias) */
+  .day-rail-wrap{position:relative;}
+  .day-rail.show-bar{scrollbar-width:thin;scrollbar-color:var(--lime) var(--line);padding-bottom:14px;}
+  .day-rail.show-bar::-webkit-scrollbar{display:block;height:4px;}
+  .day-rail.show-bar::-webkit-scrollbar-track{background:var(--line);border-radius:4px;margin:0 20px;}
+  .day-rail.show-bar::-webkit-scrollbar-thumb{background:var(--lime);border-radius:4px;}
+  .rail-arrow{display:none;position:absolute;top:0;bottom:20px;width:30px;border:0;padding:0;font-size:22px;line-height:1;color:var(--muted);cursor:pointer;z-index:2;align-items:center;}
+  .rail-arrow.left{left:0;justify-content:flex-start;padding-left:6px;background:linear-gradient(90deg,var(--bg-base) 35%,transparent);}
+  .rail-arrow.right{right:0;justify-content:flex-end;padding-right:6px;background:linear-gradient(270deg,var(--bg-base) 35%,transparent);}
+  .rail-arrow.on{display:flex;}
+  .rail-arrow:active{color:var(--lime);}
   /* ===== AJUDA / TUTORIAL ===== */
   .help-q{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;min-width:22px;padding:0;margin-left:6px;border-radius:50%;border:1px solid var(--blue);background:transparent;color:var(--blue);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;line-height:1;cursor:pointer;vertical-align:middle;}
   .help-q:active{background:var(--blue);color:#101314;}
@@ -908,7 +919,11 @@
   </header>
 
   <div class="tracks" id="trackSelect"></div>
-  <div class="day-rail" id="dayRail"></div>
+  <div class="day-rail-wrap" id="dayRailWrap">
+    <button class="rail-arrow left" id="railLeft" aria-label="Dias anteriores">‹</button>
+    <div class="day-rail" id="dayRail"></div>
+    <button class="rail-arrow right" id="railRight" aria-label="Próximos dias">›</button>
+  </div>
 
   <div id="sessionArea"></div>
 
@@ -2495,7 +2510,31 @@ function renderDayRail(){
     chip.onclick = () => { state.day = i; state._doneShown = null; save(); renderAll(); };
     el.appendChild(chip);
   });
+  // Desafio 21 dias: barra de rolagem + setas sutis nas pontas
+  const rolavel = state.track === 'nivel';
+  el.classList.toggle('show-bar', rolavel);
+  if (rolavel) {
+    const ativo = el.children[state.day];
+    if (ativo) el.scrollLeft = ativo.offsetLeft - (el.clientWidth - ativo.offsetWidth) / 2;
+  }
+  atualizarSetasTrilha();
 }
+function atualizarSetasTrilha(){
+  const el = document.getElementById('dayRail');
+  const l = document.getElementById('railLeft'), r = document.getElementById('railRight');
+  if (!el || !l || !r) return;
+  const rolavel = state.track === 'nivel' && el.scrollWidth > el.clientWidth + 4;
+  l.classList.toggle('on', rolavel && el.scrollLeft > 4);
+  r.classList.toggle('on', rolavel && el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+}
+(function(){
+  const el = document.getElementById('dayRail');
+  if (!el) return;
+  el.addEventListener('scroll', atualizarSetasTrilha, {passive:true});
+  window.addEventListener('resize', atualizarSetasTrilha);
+  document.getElementById('railLeft').onclick = () => el.scrollBy({left:-Math.round(el.clientWidth*0.7), behavior:'smooth'});
+  document.getElementById('railRight').onclick = () => el.scrollBy({left: Math.round(el.clientWidth*0.7), behavior:'smooth'});
+})();
 
 function renderSession(){
   const prog = PROGRAMS[state.track];
@@ -2540,7 +2579,7 @@ function renderSession(){
             const cls = w.total ? 'done' : 'running';
             const rotulo = w.total ? 'Tempo total deste treino' : 'Treino em andamento';
             return `<span class="time-badge ${cls}" title="${rotulo}">⏱ <span id="workoutClockVal">${fmtClock(seg)}</span><button class="time-reset" id="workoutReset" title="Zerar cronômetro">↺</button></span>`;
-          })()}<button class="help-q" style="margin-top:8px" data-help="cron-total" aria-label="Ajuda: cronômetro total">?</button>
+          })()}
           <div class="limit-note ${overLimit ? 'show' : ''}">⚠️ Acima do limite de 90 min</div>
         </div>
       </div>
@@ -2551,13 +2590,13 @@ function renderSession(){
         <button class="export-btn" id="exportWeekBtn" title="${isDesafio() ? 'Exportar todos os dias do desafio' : 'Exportar todos os dias de treino da semana'}">
           <span class="e-ic">📄</span> ${isDesafio() ? 'Desafio' : 'Semana'}
         </button>
-        <button class="help-q" data-help="exportar" aria-label="Ajuda: exportar PDF">?</button>
+        
         ${dayHasTips ? `
           <button class="tips-global-btn" id="tipsGlobalBtn">
             <span class="g-ic">${anyOpenInDay ? '▾' : '▸'}</span>
             ${anyOpenInDay ? 'Recolher dicas' : 'Expandir dicas'}
           </button>
-          <button class="help-q" data-help="dicas" aria-label="Ajuda: dicas dos exercícios">?</button>
+          
         ` : ''}
       </div>
     </div>
@@ -2589,7 +2628,7 @@ function renderSession(){
       ssBarra = `
         <div class="ss-bar">
           <div class="ss-top">
-            <span style="display:flex;align-items:center;"><span class="ss-badge ${ssGrupo.tipo === 'BI-SET' ? 'b' : 't'}">${ssGrupo.tipo}</span><button class="help-q" data-help="biset" aria-label="Ajuda: bi-set e tri-set">?</button></span>
+            <span class="ss-badge ${ssGrupo.tipo === 'BI-SET' ? 'b' : 't'}">${ssGrupo.tipo}</span>
             <span class="ss-round">rodada ${Math.min(feitas + (feitas < ssGrupo.rounds ? 1 : 0), ssGrupo.rounds)}/${ssGrupo.rounds}</span>
           </div>
           <div class="ss-seq">${seq.join(' <span class="ss-arrow">→</span> ')}</div>
@@ -2643,14 +2682,14 @@ function renderSession(){
               <div class="set-dots">${Array.from({length:setsInfo.total}).map((_,i)=>`<div class="set-dot ${i<doneSets?'filled':''}"></div>`).join('')}</div>
               <button class="set-tracker-btn ${doneSets>=setsInfo.total?'done':''}" data-key="${key}" data-total="${setsInfo.total}" data-rest="${setsInfo.rest}" data-name="${ex.name}">
                 ${doneSets>=setsInfo.total ? 'Todas as séries feitas ✓' : `Concluir série ${doneSets+1}/${setsInfo.total} · descanso ${setsInfo.rest}s`}
-              </button><button class="help-q" data-help="series" aria-label="Ajuda: concluir série">?</button>
+              </button>
             </div>
           `) : ''}
           ${setsInfo || ex.loadable ? `
             <div class="load-row">
               <span class="load-label">Carga:</span>
               <input class="load-input" type="text" inputmode="decimal" placeholder="kg" value="${loadData.last || ''}" data-loadkey="${loadKey}">
-              <span class="load-label">kg</span><button class="help-q" data-help="carga" aria-label="Ajuda: registro de carga">?</button>
+              <span class="load-label">kg</span>
               ${loadData.history.length ? `<span class="load-history">últimas: ${loadData.history.slice(-3).map(v=>`<b>${v}</b>`).join(' · ')}</span>` : ''}
             </div>
           ` : ''}
@@ -2666,7 +2705,7 @@ function renderSession(){
           ` : ''}
           <div class="ex-edit-controls">
             <button class="edit" data-action="edit" data-si="${si}" data-ei="${ei}" data-custom="${isCustom}">✏️ Editar</button>
-            <button class="del" data-action="del" data-si="${si}" data-ei="${ei}" data-custom="${isCustom}">🗑️ Excluir</button><button class="help-q" data-help="editar" aria-label="Ajuda: editar e adicionar exercícios">?</button>
+            <button class="del" data-action="del" data-si="${si}" data-ei="${ei}" data-custom="${isCustom}">🗑️ Excluir</button>
           </div>
         </div>
       `;
@@ -2842,7 +2881,7 @@ function renderSession(){
   historyEl.className = 'history-block';
   const hist = (state.weekHistory[state.track] || []).slice().sort((a,b) => b.week - a.week);
   historyEl.innerHTML = `
-    <h3><span class="h-ic">📅</span> ${isDesafio() ? 'Histórico do desafio' : 'Histórico de semanas'}<button class="help-q" data-help="historico" aria-label="Ajuda: histórico">?</button></h3>
+    <h3><span class="h-ic">📅</span> ${isDesafio() ? 'Histórico do desafio' : 'Histórico de semanas'}</h3>
     <div class="history-total">
       ${isDesafio() ? 'Tentativa atual' : 'Semana atual'}: <b>${state.week[state.track] || 1}</b> &nbsp;·&nbsp;
       ${isDesafio() ? 'Desafios concluídos' : 'Semanas concluídas'}: <b>${hist.length}</b> &nbsp;·&nbsp;
@@ -2884,7 +2923,7 @@ function renderSession(){
   const backupEl = document.createElement('div');
   backupEl.className = 'backup-bar';
   backupEl.innerHTML = `
-    <h3><span class="b-ic">💾</span> Backup & Exportação<button class="help-q" data-help="backup" aria-label="Ajuda: backup e exportação">?</button></h3>
+    <h3><span class="b-ic">💾</span> Backup & Exportação</h3>
     <button class="backup-btn" id="exportJsonBtn" title="Backup completo em JSON (para restaurar depois)">
       <span class="b-ic">⬇️</span> JSON
     </button>

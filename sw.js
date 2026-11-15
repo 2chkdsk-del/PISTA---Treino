@@ -1,6 +1,6 @@
 // sw.js - Service Worker do PISTA
 // Ao publicar uma versão nova do app, aumente a versão abaixo (ex.: pista-v2.0.1).
-const CACHE_NAME = 'pista-v2.0.7';
+const CACHE_NAME = 'pista-v2.0.8';
 const FONT_CACHE = 'pista-fonts-v1';
 const CORE = ['./', 'index.html', 'manifest.json'];
 const EXTRA = ['icon-192.png', 'icon-512.png'];
