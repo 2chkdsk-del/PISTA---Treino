@@ -1,17 +1,170 @@
 {
-  "name": "PISTA - Treino em Casa & Academia",
-  "short_name": "PISTA",
-  "description": "Treino de calistenia em casa e academia performance",
-  "id": "./",
-  "start_url": "./",
-  "scope": "./",
-  "display": "standalone",
-  "background_color": "#101314",
-  "theme_color": "#101314",
-  "orientation": "portrait",
-  "lang": "pt-BR",
-  "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
-  ]
+  "app": "PISTA",
+  "version": "v2",
+  "exportedAt": "2026-11-18T18:08:17.314Z",
+  "state": {
+    "track": "academia",
+    "day": 2,
+    "checked": {
+      "academia|0|0|0": true,
+      "academia|0|0|1": true,
+      "academia|0|0|2": true,
+      "academia|0|1|0": true,
+      "academia|0|1|1": true,
+      "academia|0|1|2": true,
+      "academia|0|2|0": true,
+      "academia|0|2|1": true,
+      "academia|0|3|0": true,
+      "academia|0|3|1": true,
+      "academia|0|4|0": true,
+      "academia|0|4|1": true,
+      "academia|0|4|2": true,
+      "academia|0|4|3": true,
+      "academia|1|0|0": true,
+      "academia|1|0|1": true,
+      "academia|1|0|2": true,
+      "academia|1|1|0": true,
+      "academia|1|1|1": true,
+      "academia|1|2|0": true,
+      "academia|1|2|1": true,
+      "academia|1|3|0": true,
+      "academia|1|3|1": true,
+      "academia|1|3|2": true,
+      "academia|1|4|0": true,
+      "academia|1|4|1": true,
+      "academia|1|4|2": true
+    },
+    "setsDone": {
+      "academia|0|0|0": 2,
+      "academia|0|0|1": 2,
+      "academia|0|1|0": 3,
+      "academia|0|1|1": 3,
+      "academia|0|1|2": 3,
+      "academia|0|2|0": 3,
+      "academia|0|2|1": 3,
+      "academia|0|3|0": 3,
+      "academia|0|3|1": 3,
+      "academia|0|4|1": 3,
+      "academia|0|4|2": 2,
+      "academia|0|4|3": 2,
+      "academia|1|0|0": 2,
+      "academia|1|0|1": 2,
+      "academia|1|2|0": 4,
+      "academia|1|2|1": 4,
+      "academia|1|1|0": 4,
+      "academia|1|1|1": 4,
+      "academia|1|3|0": 3,
+      "academia|1|3|1": 3,
+      "academia|1|3|2": 3,
+      "academia|1|4|0": 3,
+      "academia|1|4|1": 2
+    },
+    "customExercises": {
+      "academia|1|2": [
+        {
+          "name": "Remada curvada com barra w",
+          "meta": "4 séries x 8-10 · descanso 90s",
+          "biset": true,
+          "triset": false
+        },
+        {
+          "name": "Barra fixa supinada",
+          "meta": "4 séries x 6-8",
+          "biset": true,
+          "triset": false
+        }
+      ],
+      "academia|1|1": [
+        {
+          "name": "Rosca direta com alteres",
+          "meta": "4 séries x 10-12",
+          "biset": true,
+          "triset": false
+        }
+      ]
+    },
+    "loads": {
+      "academia|0|1|0": {
+        "last": "20",
+        "history": [
+          "20"
+        ]
+      },
+      "academia|0|1|1": {
+        "last": "16",
+        "history": [
+          "16"
+        ]
+      },
+      "academia|0|1|2": {
+        "last": "10",
+        "history": [
+          "10"
+        ]
+      },
+      "academia|0|2|0": {
+        "last": "10",
+        "history": [
+          "10"
+        ]
+      },
+      "academia|0|2|1": {
+        "last": "5",
+        "history": [
+          "5"
+        ]
+      },
+      "academia|1|2|1": {
+        "last": "",
+        "history": [
+          "38"
+        ]
+      },
+      "academia|1|2|0": {
+        "last": "",
+        "history": [
+          "12"
+        ]
+      }
+    },
+    "tipsOpen": {
+      "academia|0|2|1": true,
+      "academia|1|2|0": false
+    },
+    "week": {
+      "calistenia": 1,
+      "nivel": 1,
+      "academia": 1
+    },
+    "weekCompleted": {
+      "calistenia": false,
+      "nivel": false,
+      "academia": false
+    },
+    "weekHistory": {
+      "calistenia": [],
+      "nivel": [],
+      "academia": []
+    },
+    "workouts": {
+      "academia|0|1": {
+        "start": null,
+        "total": 5000
+      },
+      "academia|1|1": {
+        "start": null,
+        "total": 5948
+      }
+    },
+    "dayTimes": {
+      "academia|1|0": 5000,
+      "academia|1|1": 5948
+    },
+    "deletedBase": [
+      "academia|1|2|0",
+      "academia|1|2|1",
+      "academia|1|1|1"
+    ],
+    "_doneShown": null
+  }
 }
